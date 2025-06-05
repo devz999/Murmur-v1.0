@@ -22,7 +22,7 @@ async def get_word_pairs_endpoint(req: WordPairsRequest):
         + str(req.selected_words)
     )
 
-    completion = openai.ChatCompletion.create(
+    completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": word_prompt}]
     )
