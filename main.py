@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 if os.getenv("OPEN_API_KEY"):
-    API_KEY = os.getenv("OPEN_API_KEY")
+    API_KEY = "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"
 else:
     print('No API KEY')
 client = OpenAI(api_key=API_KEY)
