@@ -6,12 +6,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
+print(openai.api_key)
 app = FastAPI()
 
 class WordPairsRequest(BaseModel):
     selected_words: list
     customization: str
+
+@app.get("/")
+async def root():
+    return {"message": "Server is alive, Dev!"}
 
 @app.post("/get_word_pairs")
 async def get_word_pairs_endpoint(req: WordPairsRequest):
