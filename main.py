@@ -25,6 +25,9 @@ class WordPairsRequest(BaseModel):
     selected_words: list
     customization: str
 
+class GetQuotes(BaseModel):
+    eng_words: list
+
 @app.get("/")
 async def root():
     return {"message": "Server is alive, Dev!"}
@@ -38,6 +41,17 @@ async def get_word_pairs_endpoint(req: WordPairsRequest):
         + str(req.selected_words)
     )
 
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": word_prompt}]
+    )
+    print(completion)
+
+    return {"result": completion.choices[0].message.content}
+
+@app.post("/get_quotes")
+async def get_word_pairs_endpoint(req: GetQuotes):
+    prompt = f"For each of the words in {req.eng_words} give me a motivational or iconic quotes or popular saying that includes the word or the closest relation, with author and year. Format: Quote — Author (Year). If it is a popular saying, use '*language of origin saying' as author. No quotes, no numbering, no bullet points."
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": word_prompt}]
