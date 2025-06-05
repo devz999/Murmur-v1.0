@@ -54,7 +54,7 @@ async def get_word_pairs_endpoint(req: GetQuotes):
     prompt = f"For each of the words in {req.eng_words} give me a motivational or iconic quotes or popular saying that includes the word or the closest relation, with author and year. Format: Quote — Author (Year). If it is a popular saying, use '*language of origin saying' as author. No quotes, no numbering, no bullet points."
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[{"role": "user", "content": word_prompt}]
+        messages=[{"role": "user", "content": prompt}]
     )
     print(completion)
 
