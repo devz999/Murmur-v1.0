@@ -1,12 +1,16 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import openai
+from openai import OPENAI
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
-print(openai.api_key)
+if os.getenv("OPENAI_API_KEY"):
+    API_KEY = os.getenv("OPENAI_API_KEY")
+else:
+    print('No API KEY')
+client = OpenAI(api_key=API_KEY)
 app = FastAPI()
 
 class WordPairsRequest(BaseModel):
