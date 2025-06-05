@@ -3,9 +3,16 @@ from pydantic import BaseModel
 import openai
 from openai import OpenAI
 import os
-from dotenv import load_dotenv
+import traceback
+from fastapi.responses import JSONResponse
+from fastapi import Request
 
-load_dotenv()
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    print("🔥 Exception caught in global handler:")
+    print(traceback.format_exc())
+    return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
 if os.getenv("OPEN_API_KEY"):
     API_KEY = "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"
 else:
