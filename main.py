@@ -15,7 +15,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 if os.getenv("OPEN_API_KEY"):
-    API_KEY = "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"
+    API_KEY = "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"
 else:
     print('No API KEY')
 client = OpenAI(api_key=API_KEY)
