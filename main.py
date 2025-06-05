@@ -7,6 +7,7 @@ import traceback
 from fastapi.responses import JSONResponse
 from fastapi import Request
 
+app = FastAPI()
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     print("🔥 Exception caught in global handler:")
@@ -18,7 +19,7 @@ if os.getenv("OPEN_API_KEY"):
 else:
     print('No API KEY')
 client = OpenAI(api_key=API_KEY)
-app = FastAPI()
+
 
 class WordPairsRequest(BaseModel):
     selected_words: list
