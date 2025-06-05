@@ -42,5 +42,6 @@ async def get_word_pairs_endpoint(req: WordPairsRequest):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": word_prompt}]
     )
+    print(completion)
 
     return {"result": completion.choices[0].message.content}
