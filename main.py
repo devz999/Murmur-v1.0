@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-if os.getenv("OPENAI_API_KEY"):
-    API_KEY = os.getenv("OPENAI_API_KEY")
+if os.getenv("OPEN_API_KEY"):
+    API_KEY = os.getenv("OPEN_API_KEY")
 else:
     print('No API KEY')
 client = OpenAI(api_key=API_KEY)
