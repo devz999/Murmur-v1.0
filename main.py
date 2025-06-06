@@ -28,6 +28,18 @@ class WordPairsRequest(BaseModel):
 class GetQuotes(BaseModel):
     eng_words: list
 
+class VersionCheckRequest(BaseModel):
+    current_version: str
+    platform: Optional[str] = "windows"  # or "mac", "linux"
+
+class UpdateInfoResponse(BaseModel):
+    update_available: bool
+    latest_version: str
+    download_url: str
+    size: int
+    release_notes: str
+    mandatory: bool = False
+
 @app.get("/")
 async def root():
     return {"message": "Server is alive, Dev!"}
@@ -59,3 +71,60 @@ async def get_word_pairs_endpoint(req: GetQuotes):
     print(completion)
 
     return {"result": completion.choices[0].message.content}
+    
+
+@app.post("/check_update")
+async def check_update_endpoint(req: VersionCheckRequest):
+    """
+    Checks if an update is available for the application.
+    
+    Returns:
+    - update_available: bool
+    - latest_version: str
+    - download_url: str (if update available)
+    - size: int in bytes (if update available)
+    - release_notes: str
+    - mandatory: bool (if update is required)
+    """
+    # This would typically come from your database or version control system
+    LATEST_VERSION = "2.0.1"
+    RELEASE_NOTES = "Testing Updates"
+    
+    # Platform-specific download URLs
+    DOWNLOAD_URLS = {
+        "windows": "https://your-cdn.com/updates/murmur_v1.2.3.zip",
+        "mac": "https://your-cdn.com/updates/murmur_v1.2.3.zip",
+        "linux": "https://your-cdn.com/updates/murmur_linux_v1.2.3.zip"
+    }
+    
+    # Compare versions (simple string comparison - for semantic versioning you'd need more logic)
+    if req.current_version < LATEST_VERSION:
+        return UpdateInfoResponse(
+            update_available=True,
+            latest_version=LATEST_VERSION,
+            download_url=DOWNLOAD_URLS.get(req.platform, DOWNLOAD_URLS["windows"]),
+            size=get_remote_file_size(DOWNLOAD_URLS.get(req.platform)),
+            release_notes=RELEASE_NOTES,
+            mandatory=is_mandatory_update(req.current_version)
+    else:
+        return UpdateInfoResponse(
+            update_available=False,
+            latest_version=req.current_version,
+            download_url="",
+            size=0,
+            release_notes=""
+        )
+
+def get_remote_file_size(url: str) -> int:
+    """Helper function to get remote file size without downloading"""
+    try:
+        response = requests.head(url, allow_redirects=True)
+        return int(response.headers.get('content-length', 0))
+    except:
+        return 0
+
+def is_mandatory_update(current_version: str) -> bool:
+    """Determine if this is a mandatory update (e.g., security fixes)"""
+    # Implement your logic here - this is just an example
+    MANDATORY_MIN_VERSION = "2.0.1"
+    return current_version < MANDATORY_MIN_VERSION
