@@ -92,7 +92,7 @@ async def check_update_endpoint(req: VersionCheckRequest):
             update_available=True,
             latest_version=LATEST_VERSION,
             download_url=DOWNLOAD_URLS.get(req.platform, DOWNLOAD_URLS["windows"]),
-            size=8719*1024,
+            size=8928256,
             release_notes=RELEASE_NOTES,
             mandatory=is_mandatory_update(req.current_version))
     else:
@@ -110,7 +110,7 @@ def get_remote_file_size(url: str) -> int:
         response = requests.head(url, allow_redirects=True)
         return int(response.headers.get('content-length', 0))
     except:
-        return 0
+        return 1
 
 def is_mandatory_update(current_version: str) -> bool:
     """Determine if this is a mandatory update (e.g., security fixes)"""
