@@ -105,7 +105,7 @@ async def check_update_endpoint(req: VersionCheckRequest):
             download_url=DOWNLOAD_URLS.get(req.platform, DOWNLOAD_URLS["windows"]),
             size=get_remote_file_size(DOWNLOAD_URLS.get(req.platform)),
             release_notes=RELEASE_NOTES,
-            mandatory=is_mandatory_update(req.current_version)
+            mandatory=is_mandatory_update(req.current_version))
     else:
         return UpdateInfoResponse(
             update_available=False,
