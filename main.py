@@ -30,7 +30,7 @@ class GetQuotes(BaseModel):
 
 class VersionCheckRequest(BaseModel):
     current_version: str
-    platform: "windows"  # or "mac", "linux"
+    platform: str  # or "mac", "linux"
 
 class UpdateInfoResponse(BaseModel):
     update_available: bool
@@ -38,7 +38,7 @@ class UpdateInfoResponse(BaseModel):
     download_url: str
     size: int
     release_notes: str
-    mandatory: bool = False
+    mandatory: bool
 
 @app.get("/")
 async def root():
@@ -75,17 +75,6 @@ async def get_word_pairs_endpoint(req: GetQuotes):
 
 @app.post("/check_update")
 async def check_update_endpoint(req: VersionCheckRequest):
-    """
-    Checks if an update is available for the application.
-    
-    Returns:
-    - update_available: bool
-    - latest_version: str
-    - download_url: str (if update available)
-    - size: int in bytes (if update available)
-    - release_notes: str
-    - mandatory: bool (if update is required)
-    """
     # This would typically come from your database or version control system
     LATEST_VERSION = "2.0.1"
     RELEASE_NOTES = "Testing Updates"
