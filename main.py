@@ -30,7 +30,7 @@ class GetQuotes(BaseModel):
 
 class VersionCheckRequest(BaseModel):
     current_version: str
-    platform: Optional[str] = "windows"  # or "mac", "linux"
+    platform: "windows"  # or "mac", "linux"
 
 class UpdateInfoResponse(BaseModel):
     update_available: bool
@@ -92,9 +92,9 @@ async def check_update_endpoint(req: VersionCheckRequest):
     
     # Platform-specific download URLs
     DOWNLOAD_URLS = {
-        "windows": "https://github.com/devz999/Murmur-v1.0/blob/main/Murmur_v2.0.1.zip",
-        "mac": "https://github.com/devz999/Murmur-v1.0/blob/main/Murmur_v2.0.1.zip",
-        "linux": "https://github.com/devz999/Murmur-v1.0/blob/main/Murmur_v2.0.1.zip"
+        "windows": "https://github.com/devz999/Murmur_UI/blob/main/Murmur_v2.0.1.zip",
+        "mac": "https://github.com/devz999/Murmur_UI/blob/main/Murmur_v2.0.1.zip",
+        "linux": "https://github.com/devz999/Murmur_UI/blob/main/Murmur_v2.0.1.zip"
     }
     
     # Compare versions (simple string comparison - for semantic versioning you'd need more logic)
