@@ -127,4 +127,5 @@ def is_mandatory_update(current_version: str) -> bool:
     """Determine if this is a mandatory update (e.g., security fixes)"""
     # Implement your logic here - this is just an example
     MANDATORY_MIN_VERSION = "2.0.1"
+    print(current_version, MANDATORY_MIN_VERSION)
     return current_version < MANDATORY_MIN_VERSION
