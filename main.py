@@ -81,9 +81,9 @@ async def check_update_endpoint(req: VersionCheckRequest):
     
     # Platform-specific download URLs
     DOWNLOAD_URLS = {
-        "windows": "https://github.com/devz999/Murmur_UI/blob/61b4c25fc34efbfc5c23a2d4c71672f184c3e236/Murmur_v2.0.1.zip",
-        "mac": "https://github.com/devz999/Murmur_UI/blob/61b4c25fc34efbfc5c23a2d4c71672f184c3e236/Murmur_v2.0.1.zip",
-        "linux": "https://github.com/devz999/Murmur_UI/blob/61b4c25fc34efbfc5c23a2d4c71672f184c3e236/Murmur_v2.0.1.zip"
+        "windows": "https://github.com/devz999/Murmur_UI/raw/main/Murmur_v2.0.1.zip",
+        "mac": "https://github.com/devz999/Murmur_UI/raw/main/Murmur_v2.0.1.zip",
+        "linux": "https://github.com/devz999/Murmur_UI/raw/main/Murmur_v2.0.1.zipp"
     }
     
     # Compare versions (simple string comparison - for semantic versioning you'd need more logic)
