@@ -92,9 +92,9 @@ async def check_update_endpoint(req: VersionCheckRequest):
     
     # Platform-specific download URLs
     DOWNLOAD_URLS = {
-        "windows": "https://your-cdn.com/updates/murmur_v1.2.3.zip",
-        "mac": "https://your-cdn.com/updates/murmur_v1.2.3.zip",
-        "linux": "https://your-cdn.com/updates/murmur_linux_v1.2.3.zip"
+        "windows": "https://github.com/devz999/Murmur-v1.0/blob/main/Murmur_v2.0.1.zip",
+        "mac": "https://github.com/devz999/Murmur-v1.0/blob/main/Murmur_v2.0.1.zip",
+        "linux": "https://github.com/devz999/Murmur-v1.0/blob/main/Murmur_v2.0.1.zip"
     }
     
     # Compare versions (simple string comparison - for semantic versioning you'd need more logic)
