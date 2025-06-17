@@ -7,4 +7,3 @@ class UserPing(Base):
     user = Column(String, primary_key=True)
     timestamp = Column(DateTime)
     location = Column(JSON)
-    languages = Column(JSON)  # List of languages stored as JSON
