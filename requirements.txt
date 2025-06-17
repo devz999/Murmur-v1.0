@@ -2,3 +2,6 @@ fastapi
 uvicorn
 openai>=1.82.0
 python-dotenv
+sqlalchemy
+sqlalchemy[asyncio]
+asyncpg
