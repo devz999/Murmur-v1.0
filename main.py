@@ -135,8 +135,12 @@ class VerifyResponse(BaseModel):
 
 @app.on_event("startup")
 async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("✅ Tables created.")
+    except Exception as e:
+        print(f"❌ Failed to create tables: {e}")
 
 async def generate_unique_key(db: AsyncSession) -> str:
     for _ in range(10):
