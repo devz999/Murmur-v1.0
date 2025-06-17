@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 import openai
 from openai import OpenAI
@@ -6,6 +6,12 @@ import os
 import traceback
 from fastapi.responses import JSONResponse
 from fastapi import Request
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from db import get_db, Base, engine
+from models import UserPing
+from datetime import datetime
+import random
 
 app = FastAPI()
 @app.exception_handler(Exception)
@@ -118,3 +124,45 @@ def is_mandatory_update(current_version: str) -> bool:
     MANDATORY_MIN_VERSION = "2.0.1"
     print(current_version, MANDATORY_MIN_VERSION)
     return current_version < MANDATORY_MIN_VERSION
+
+class VerifyRequest(BaseModel):
+    user: str
+    timestamp: datetime
+    location: dict
+
+class VerifyResponse(BaseModel):
+    user_key: str
+
+@app.on_event("startup")
+async def on_startup():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+async def generate_unique_key(db: AsyncSession) -> str:
+    for _ in range(10):
+        key = str(random.randint(10000000, 99999999))
+        exists = await db.execute(select(UserPing).where(UserPing.user == key))
+        if not exists.scalar():
+            return key
+    raise Exception("Ran out of unique keys. Congrats, you broke the universe.")
+
+@app.post("/verify", response_model=VerifyResponse)
+async def verify_user(req: VerifyRequest, db: AsyncSession = Depends(get_db)):
+    user = req.user
+    if user == "NA":
+        user = await generate_unique_key(db)
+
+    user_data = await db.get(UserPing, user)
+    if not user_data:
+        user_data = UserPing(
+            user=user,
+            timestamp=req.timestamp,
+            location=req.location
+        )
+        db.add(user_data)
+    else:
+        user_data.timestamp = req.timestamp
+        user_data.location = req.location
+
+    await db.commit()
+    return {"user_key": user}
