@@ -50,11 +50,11 @@ def update_github_file(
         print('Failed to update GIT')
         return 'Failed GIT'
 
-def generate_random_key(length=8):
+def generate_random_key_git(length=8):
     chars = string.ascii_letters + string.digits
     return ''.join(random.choices(chars, k=length))
 
-def get_existing_keys(csv_url):
+def get_existing_keys_git(csv_url):
     try:
         # Use the *raw* GitHub URL, not the edit URL!
         df = pd.read_csv(csv_url)
@@ -64,7 +64,7 @@ def get_existing_keys(csv_url):
         print("❌ Error reading CSV:", e)
         return set()
 
-def generate_unique_key(csv_url, max_attempts=20):
+def generate_unique_key_git(csv_url, max_attempts=20):
     existing_keys = get_existing_keys(csv_url)
     
     for _ in range(max_attempts):
