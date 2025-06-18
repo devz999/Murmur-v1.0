@@ -7,7 +7,7 @@ import random
 import requests
 import base64
 
-def append_to_github_file(
+def update_github_file(
     token: str,
     repo_owner: str,
     repo_name: str,
