@@ -185,7 +185,7 @@ async def verify_user(req: VerifyRequest):
 
     #await db.commit()
     loc = req.location
-    utc_str = req.timestamp
+    utc_str = str(req.timestamp)
     
     # Parse as UTC
     utc_dt = datetime.fromisoformat(utc_str).replace(tzinfo=timezone.utc)
