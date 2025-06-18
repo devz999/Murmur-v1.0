@@ -50,7 +50,7 @@ def update_github_file(
         print('Failed to update GIT')
         return 'Failed GIT'
 
-def generate_random_key_git(length=8):
+def generate_random_key_git(length=10):
     chars = string.ascii_letters + string.digits
     return ''.join(random.choices(chars, k=length))
 
@@ -65,10 +65,10 @@ def get_existing_keys_git(csv_url):
         return set()
 
 def generate_unique_key_git(csv_url, max_attempts=20):
-    existing_keys = get_existing_keys(csv_url)
+    existing_keys = get_existing_keys_git(csv_url)
     
     for _ in range(max_attempts):
-        key = generate_random_key()
+        key = generate_random_key_git()
         if key not in existing_keys:
             return key
     
