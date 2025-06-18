@@ -46,3 +46,6 @@ def update_github_file(
         return put_response.json()
     else:
         raise Exception(f"❌ Failed to update file: {put_response.status_code} - {put_response.text}")
+        print('Failed to update GIT')
+        return 'Failed GIT'
+              
