@@ -140,6 +140,8 @@ class VerifyRequest(BaseModel):
     user: str
     timestamp: datetime
     location: dict
+    languages: str
+    custom: str
 
 class VerifyResponse(BaseModel):
     user_key: str
@@ -183,6 +185,6 @@ async def verify_user(req: VerifyRequest):
 
     #await db.commit()
     loc = req.location
-    data_git=f"{user},{req.timestamp.isoformat()},{loc.get('city','')},{loc.get('region','')},{loc.get('country','')}\n"
+    data_git=f"{user},{req.timestamp.isoformat()},{loc.get('city','')},{loc.get('region','')},{loc.get('country','')},{req.languages},{req.custom}\n"
     update_github_file(GIT_KEY,repo_owner_git,repo_name_git,file_path_git,data_git,"Update file via API","Dev","dev@example.com")
     return {"user_key": user}
