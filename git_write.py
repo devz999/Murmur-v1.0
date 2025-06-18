@@ -1,5 +1,6 @@
 import base64
 import requests
+import pandas as pd
 
 def update_github_file(
     token: str,
@@ -48,4 +49,29 @@ def update_github_file(
         raise Exception(f"❌ Failed to update file: {put_response.status_code} - {put_response.text}")
         print('Failed to update GIT')
         return 'Failed GIT'
+
+def generate_random_key(length=8):
+    chars = string.ascii_letters + string.digits
+    return ''.join(random.choices(chars, k=length))
+
+def get_existing_keys(csv_url):
+    try:
+        # Use the *raw* GitHub URL, not the edit URL!
+        df = pd.read_csv(csv_url)
+        first_col = df.columns[0]
+        return set(df[first_col].astype(str).values)
+    except Exception as e:
+        print("❌ Error reading CSV:", e)
+        return set()
+
+def generate_unique_key(csv_url, max_attempts=20):
+    existing_keys = get_existing_keys(csv_url)
+    
+    for _ in range(max_attempts):
+        key = generate_random_key()
+        if key not in existing_keys:
+            return key
+    
+    raise Exception("💥 Failed to generate a unique key after many tries.")
+
               
