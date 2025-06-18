@@ -4,13 +4,16 @@ import pandas as pd
 import string
 import random
 
-def update_github_file(
+import requests
+import base64
+
+def append_to_github_file(
     token: str,
     repo_owner: str,
     repo_name: str,
     file_path: str,
     new_content: str,
-    commit_message: str = "Update file via API",
+    commit_message: str = "Append content via API",
     committer_name: str = "Dev",
     committer_email: str = "dev@example.com"
 ):
@@ -20,17 +23,22 @@ def update_github_file(
         "Accept": "application/vnd.github+json"
     }
 
-    # Get the current file SHA
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        sha = response.json()["sha"]
-    elif response.status_code == 404:
-        sha = None  # File doesn't exist yet
-    else:
-        raise Exception(f"Failed to get file SHA: {response.text}")
+        file_data = response.json()
+        sha = file_data["sha"]
+        existing_content = base64.b64decode(file_data["content"]).decode()
 
-    # Encode new content to base64
-    encoded_content = base64.b64encode(new_content.encode()).decode()
+        # Append the new content
+        updated_content = existing_content.strip() + "\n" + new_content.strip()
+    elif response.status_code == 404:
+        # File doesn't exist yet
+        sha = None
+        updated_content = new_content.strip()
+    else:
+        raise Exception(f"Failed to get file: {response.status_code} - {response.text}")
+
+    encoded_content = base64.b64encode(updated_content.encode()).decode()
 
     data = {
         "message": commit_message,
@@ -39,7 +47,7 @@ def update_github_file(
             "name": committer_name,
             "email": committer_email
         },
-        "sha": sha  # optional if file doesn't exist yet
+        **({"sha": sha} if sha else {})
     }
 
     put_response = requests.put(url, headers=headers, json=data)
@@ -49,8 +57,7 @@ def update_github_file(
         return put_response.json()
     else:
         raise Exception(f"❌ Failed to update file: {put_response.status_code} - {put_response.text}")
-        print('Failed to update GIT')
-        return 'Failed GIT'
+
 
 def generate_random_key_git(length=10):
     chars = string.ascii_letters + string.digits
