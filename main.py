@@ -177,9 +177,9 @@ async def verify_user(req: VerifyRequest):
             location=req.location
         )
         db.add(user_data)'''
-    else:
+    '''else:
         user_data.timestamp = req.timestamp
-        user_data.location = req.location
+        user_data.location = req.location'''
 
     #await db.commit()
     loc = req.location
