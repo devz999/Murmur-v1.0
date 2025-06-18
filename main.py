@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from db import get_db, Base, engine
 from models import UserPing
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import random
 from git_write import update_github_file, generate_random_key_git, get_existing_keys_git,generate_unique_key_git
 
@@ -185,6 +185,13 @@ async def verify_user(req: VerifyRequest):
 
     #await db.commit()
     loc = req.location
-    data_git=f"{user},{req.timestamp.isoformat()},{loc.get('city','')},{loc.get('region','')},{loc.get('country','')},{req.languages},{req.custom}\n"
+    utc_str = req.timestamp
+    
+    # Parse as UTC
+    utc_dt = datetime.fromisoformat(utc_str).replace(tzinfo=timezone.utc)
+    
+    # Convert to Singapore time (UTC+8)
+    sg_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
+    data_git=f"{user},{sg_dt},{loc.get('city','')},{loc.get('region','')},{loc.get('country','')},{req.languages},{req.custom}\n"
     update_github_file(GIT_KEY,repo_owner_git,repo_name_git,file_path_git,data_git,"Update file via API","Dev","dev@example.com")
     return {"user_key": user}
