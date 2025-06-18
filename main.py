@@ -12,7 +12,7 @@ from db import get_db, Base, engine
 from models import UserPing
 from datetime import datetime
 import random
-from git_write import update_github_file, generate_random_key_git, get_existing_key_git,generate_unique_key_git
+from git_write import update_github_file, generate_random_key_git, get_existing_keys_git,generate_unique_key_git
 
 repo_owner_git="devz999"
 repo_name_git="Murmur-v1.0"
