@@ -7,13 +7,16 @@ import random
 import requests
 import base64
 
+import requests
+import base64
+
 def update_github_file(
     token: str,
     repo_owner: str,
     repo_name: str,
     file_path: str,
-    new_content: str,
-    commit_message: str = "Append content via API",
+    new_line: str,
+    commit_message: str = "Append line via API",
     committer_name: str = "Dev",
     committer_email: str = "dev@example.com"
 ):
@@ -23,20 +26,26 @@ def update_github_file(
         "Accept": "application/vnd.github+json"
     }
 
+    # Try to fetch the file
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         file_data = response.json()
         sha = file_data["sha"]
         existing_content = base64.b64decode(file_data["content"]).decode()
 
-        # Append the new content
-        updated_content = existing_content.strip() + "\n" + new_content.strip()
+        # Check if new_line already exists
+        if new_line.strip() in existing_content.splitlines():
+            print("⚠️ Line already exists in the file. Skipping update.")
+            return "Line already exists."
+
+        updated_content = existing_content.rstrip() + "\n" + new_line.strip()
+
     elif response.status_code == 404:
         # File doesn't exist yet
         sha = None
-        updated_content = new_content.strip()
+        updated_content = new_line.strip()
     else:
-        raise Exception(f"Failed to get file: {response.status_code} - {response.text}")
+        raise Exception(f"❌ Failed to fetch file: {response.status_code} - {response.text}")
 
     encoded_content = base64.b64encode(updated_content.encode()).decode()
 
