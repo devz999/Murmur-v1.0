@@ -32,6 +32,11 @@ else:
     print('No API KEY')
 client = OpenAI(api_key=API_KEY)
 
+if os.getenv("GIT_REPO_KEY"):
+    GIT_KEY = os.getenv("GIT_REPO_KEY")
+else:
+    print('No GIT_REPO_KEY')
+
 
 class WordPairsRequest(BaseModel):
     selected_words: list
@@ -178,5 +183,5 @@ async def verify_user(req: VerifyRequest, db: AsyncSession = Depends(get_db)):
     await db.commit()
     loc = req.location
     data_git=f"{user},{req.timestamp.isoformat()},{loc.get('city','')},{loc.get('region','')},{loc.get('country','')}\n"
-    update_github_file
+    update_github_file(GIT_KEY,repo_owner_git,repo_name_git,file_path_git,data_git,"Update file via API","Dev","dev@example.com")
     return {"user_key": user}
