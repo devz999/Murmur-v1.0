@@ -12,6 +12,11 @@ from db import get_db, Base, engine
 from models import UserPing
 from datetime import datetime
 import random
+from git_write import update_github_file
+
+repo_owner_git="devz999"
+repo_name_git="Murmur-v1.0"
+file_path_git="murmurDB.csv"
 
 #Devshan Fernando,2025
 app = FastAPI()
@@ -144,8 +149,9 @@ async def on_startup():
         print(f"❌ Failed to create tables: {e}")
 
 async def generate_unique_key(db: AsyncSession) -> str:
+    charset = string.ascii_uppercase + string.digits  # A-Z and 0-9
     for _ in range(10):
-        key = str(random.randint(10000000, 99999999))
+        key = ''.join(random.choices(charset, k=8))
         exists = await db.execute(select(UserPing).where(UserPing.user == key))
         if not exists.scalar():
             return key
@@ -170,4 +176,7 @@ async def verify_user(req: VerifyRequest, db: AsyncSession = Depends(get_db)):
         user_data.location = req.location
 
     await db.commit()
+    loc = req.location
+    data_git=f"{user},{req.timestamp.isoformat()},{loc.get('city','')},{loc.get('region','')},{loc.get('country','')}\n"
+    update_github_file
     return {"user_key": user}
