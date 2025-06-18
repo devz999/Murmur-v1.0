@@ -1,6 +1,8 @@
 import base64
 import requests
 import pandas as pd
+import string
+import random
 
 def update_github_file(
     token: str,
