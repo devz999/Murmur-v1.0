@@ -6,3 +6,4 @@ sqlalchemy
 sqlalchemy[asyncio]
 asyncpg
 requests
+pandas
