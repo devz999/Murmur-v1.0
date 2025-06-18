@@ -163,10 +163,11 @@ async def generate_unique_key(db: AsyncSession) -> str:
     raise Exception("Ran out of unique keys. Congrats, you broke the universe.")
 
 @app.post("/verify", response_model=VerifyResponse)
-async def verify_user(req: VerifyRequest, db: AsyncSession = Depends(get_db)):
+async def verify_user(req: VerifyRequest):
     user = req.user
     if user == "NA":
-        user = await generate_unique_key(db)
+        user = generate_unique_key_git("https://raw.githubusercontent.com/devz999/Murmur-v1.0/main/murmurDB.csv")
+        '''user = await generate_unique_key(db)
 
     user_data = await db.get(UserPing, user)
     if not user_data:
@@ -175,12 +176,12 @@ async def verify_user(req: VerifyRequest, db: AsyncSession = Depends(get_db)):
             timestamp=req.timestamp,
             location=req.location
         )
-        db.add(user_data)
+        db.add(user_data)'''
     else:
         user_data.timestamp = req.timestamp
         user_data.location = req.location
 
-    await db.commit()
+    #await db.commit()
     loc = req.location
     data_git=f"{user},{req.timestamp.isoformat()},{loc.get('city','')},{loc.get('region','')},{loc.get('country','')}\n"
     update_github_file(GIT_KEY,repo_owner_git,repo_name_git,file_path_git,data_git,"Update file via API","Dev","dev@example.com")
